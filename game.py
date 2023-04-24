@@ -5,10 +5,11 @@ from obstacle import Obstacle
 
 DEFAULT_SCREEN_SIZE = (800, 450)
 FPS_TEXT_COLOR = (128, 0, 128)  # dark purple
-SCORE_TEXT_COLOR = (0, 64, 160)  
+SCORE_TEXT_COLOR = (0, 64, 160)
 TEXT_COLOR = (128, 0, 0)  # dark red
 
 DEBUG = 0
+
 
 def main():
     game = Game()
@@ -20,10 +21,10 @@ class Game:
         pygame.init()
         self.clock = pygame.time.Clock()
         self.menu = Menu([
-            "New Game",
+            "Start Game",
             "High Scores",
             "About",
-            "Quit",
+            "Get Quit",
         ])
         self.is_fullscreen = False
         self.is_in_menu = True
@@ -39,13 +40,15 @@ class Game:
     def init_graphics(self):
         self.menu.set_font_size(int(48 * self.screen_h / 450))
         big_font_size = int(96 * self.screen_h / 450)
-        self.font_big = pygame.font.Font("fonts/SyneMono-Regular.ttf", big_font_size)
+        self.font_big = pygame.font.Font(
+            "fonts/SyneMono-Regular.ttf", big_font_size)
         original_bird_images = [
             pygame.image.load(f"images/chicken/flying/frame-{i}.png")
             for i in [1, 2, 3, 4]
         ]
         self.bird_imgs = [
-            pygame.transform.rotozoom(x, 0, self.screen_h / 9600).convert_alpha()
+            pygame.transform.rotozoom(
+                x, 0, self.screen_h / 9600).convert_alpha()
             for x in original_bird_images
         ]
         self.bird_radius = self.bird_imgs[0].get_height() / 2  # Likiarvo
@@ -54,7 +57,8 @@ class Game:
             for i in [1, 2]
         ]
         self.bird_dead_imgs = [
-            pygame.transform.rotozoom(img, 0, self.screen_h / 9600).convert_alpha()
+            pygame.transform.rotozoom(
+                img, 0, self.screen_h / 9600).convert_alpha()
             for img in original_bird_dead_images
         ]
         original_bg_images = [
@@ -89,7 +93,8 @@ class Game:
         self.obstacles.pop(0)
 
     def scale_positions_and_sizes(self, scale_x, scale_y):
-        self.bird_pos = (self.bird_pos[0] * scale_x, self.bird_pos[1] * scale_y)
+        self.bird_pos = (self.bird_pos[0] * scale_x,
+                         self.bird_pos[1] * scale_y)
         for i in range(len(self.bg_pos)):
             self.bg_pos[i] = self.bg_pos[i] * scale_x
         for obstacle in self.obstacles:
@@ -224,13 +229,13 @@ class Game:
                 obstacle.move(self.screen_w * 0.005)
             if obstacle.collides_with_circle(self.bird_pos, self.bird_radius):
                 self.bird_collides_with_obstacle = True
-        
+
         if self.bird_collides_with_obstacle:
             self.bird_alive = False
 
     def update_screen(self):
         # Täytä tausta vaaleansinisellä
-        #self.screen.fill((230, 230, 255))
+        # self.screen.fill((230, 230, 255))
 
         # Piirrä taustakerrokset (3 kpl)
         for i in range(len(self.bg_imgs)):
@@ -281,8 +286,10 @@ class Game:
 
         # Piirrä kehittämistä helpottava ympyrä
         if DEBUG:
-            color = (0, 0, 0) if not self.bird_collides_with_obstacle else (255, 0, 0)
-            pygame.draw.circle(self.screen, color, self.bird_pos, self.bird_radius)
+            color = (0, 0, 0) if not self.bird_collides_with_obstacle else (
+                255, 0, 0)
+            pygame.draw.circle(self.screen, color,
+                               self.bird_pos, self.bird_radius)
 
         # Piirrä FPS luku
         if self.show_fps:
